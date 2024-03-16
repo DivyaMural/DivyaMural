@@ -1,0 +1,505 @@
+1 
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+
+int i;
+struct Day{
+	int date;
+	char *name;
+	char *activity;
+};
+
+void create(struct Day calender[]){
+
+	for(i=0;i<7;i++){
+	calender[i].name=(char*)malloc(sizeof(char)*20);
+	calender[i].activity=(char*)malloc(sizeof(char)*100);
+	calender[i].date=i+1;
+	printf("\nEnter the name of the day%d: ",i+1);
+	scanf("%s",calender[i].name);
+	//printf("\nte the date for day%d: ",i+1);
+	//scanf("%d",&calender[i].date);
+	printf("\nEnter the activity of the day%d: ",i+1);
+	scanf("%s",calender[i].activity);
+	}
+}
+
+void read(struct Day calender[]){
+	create(calender);
+}
+void display(struct Day calender[]){
+	printf("\nDayName\t\tDate\tActivity\n");
+	for(i=0;i<7;i++){
+		printf("\n%s\t\t\t%d\t%s\n",calender[i].name,calender[i].date,calender[i].activity);
+	}
+}
+void freeMemory(struct Day calender[]){
+	for(i=0;i<7;i++){
+	free(calender[i].name);
+	free(calender[i].activity);
+	}
+}
+int main(){
+	struct Day calender[7];
+	//clrscr();
+	create(calender);
+	display(calender);
+	freeMemory(calender);
+
+	//getch();
+
+	return 0;
+}
+
+2
+#include<stdio.h>
+char str[50], pat[20], rep[20], res[50];
+int c = 0, m = 0, i = 0, j = 0, k, flag = 0;
+void stringmatch() {
+  while (str[c] != '\0') {
+    if (str[m] == pat[i]) {
+      i++;
+      m++;
+      if (pat[i] == '\0') {
+        flag = 1;
+        for (k = 0; rep[k] != '\0'; k++, j++) {
+          res[j] = rep[k];
+        }
+        i = 0;
+        c = m;
+      }
+    } else {
+      res[j] = str[c];
+      j++;
+      c++;
+      m = c;
+      i = 0;
+    }
+  }
+  res[j] = '\0';
+}
+void main() {
+  printf("Enter the main string:");
+  gets(str);
+  printf("\nEnter the pat string:");
+  gets(pat);
+  printf("\nEnter the replace string:");
+  gets(rep);
+  printf("\nThe string before pattern match is:\n %s", str);
+  stringmatch();
+  if (flag == 1)
+    printf("\nThe string after pattern match and replace is: \n %s ", res);
+  else
+    printf("\nPattern string is not found");
+}
+
+
+3
+
+#include <stdio.h>
+#include <stdlib.h>
+int s[5],top=-1;
+
+void push()
+{
+    if(top==4)
+        printf("\nStack overflow!!!!");
+    else
+    {
+        printf("\nEnter element to insert:");
+        scanf("%d",&s[++top]);
+    }
+}
+
+void pop()
+{
+    if(top==-1)
+        printf("\nStack underflow!!!");
+    else
+        printf("\nElement popped is: %d",s[top--]);
+}
+void disp()
+{
+    int t=top;
+    if(t==-1)
+        printf("\nStack empty!!");
+    else
+        printf("\nStack elements are:\n");
+    while(t>=0)
+        printf("%d ",s[t--]);
+}
+void pali()
+{
+    int num[5],rev[5],i,t;
+    for(i=0,t=top;t>=0;i++,t--)
+        num[i]=rev[t]=s[t];
+    for(i=0;i<=top;i++)
+        if(num[i]!=rev[i])
+        break;
+    /*printf(" num     rev\n");
+    for(t=0;t<=top;t++)
+      printf("%4d   %4d\n",num[t],rev[t]);///remove / */ to display num and rev
+    if(i==top+1)
+        printf("\nIt is a palindrome");
+    else
+        printf("\nIt is not a palindrome");
+}
+
+int main()
+{
+    int ch;
+    do
+    {
+        printf("\n...Stack operations.....\n");
+        printf("1.PUSH\n");
+        printf("2.POP\n");
+        printf("3.Palindrome\n");
+        printf("4.Display\n");
+        printf("5.Exit\n__\n");
+        printf("Enter choice:");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:push();break;
+            case 2:pop();break;
+            case 3:pali();break;
+            case 4:disp();break;
+            case 5:exit(0);
+            default:printf("\nInvalid choice");
+        }
+    }
+    while(1);
+    return 0;
+
+}
+4
+
+#include<stdio.h>
+#include<string.h>
+
+int F(char symbol)
+{
+ switch (symbol)
+ {
+ case '+':
+ case '-':return 2;
+ case '*':
+ case '/':
+ case '%':return 4;
+ case '^':
+ case '$':return 5;
+ case '(':return 0;
+ case '#':return -1;
+ default :return 8;
+ }
+}
+
+int G(char symbol)
+{
+ switch (symbol)
+ {
+ case '+':
+ case '-':return 1;
+ case '*':
+ case '/':
+ case '%':return 3;
+ case '^':
+ case '$':return 6;
+ case '(':return 3;
+ case ')':return 0;
+ default :return 7;
+ }
+}
+
+void infix_postfix(char infix[], char postfix[])
+{
+int top=-1, j=0, i;
+char s[30], symbol;
+s[++top] = '#';
+for(i=0; i < strlen(infix); i++)
+{
+ symbol = infix[i];
+ while (F(s[top]) > G(symbol))
+ {
+  postfix[j] = s[top--];
+  j++;
+ }
+ if(F(s[top]) != G(symbol))
+  s[++top] = symbol;
+ else
+  top--;
+}
+while(s[top] != '#')
+ postfix[j++] = s[top--];
+postfix[j] = '\0';
+}
+
+void main()
+{
+char infix[20], postfix[20];
+printf("\nEnter a valid infix expression\n") ;
+scanf ("%s", infix) ;
+infix_postfix (infix, postfix);
+printf("\nThe infix expression is:\n");
+printf ("%s",infix);
+printf("\nThe postfix expression is:\n");
+printf ("%s",postfix) ;
+
+}
+
+
+
+5A
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+
+float compute(char symbol, float op1, float op2)
+{
+ switch (symbol)
+ {
+  case '+': return op1 + op2;
+  case '-': return op1 - op2;
+  case '*': return op1 * op2;
+  case '/': return op1 / op2;
+  case '$':
+  case '^': return pow(op1,op2);
+  default : return 0;
+ }
+}
+
+void main()
+{
+float s[20], res, op1, op2;
+int top, i;
+char postfix[20], symbol;
+printf("\nEnter the postfix expression:\n");
+scanf ("%s", postfix);
+top=-1;
+for (i=0; i<strlen(postfix) ;i++)
+{
+symbol = postfix[i];
+if(isdigit(symbol))
+ s[++top]=symbol - '0';
+else
+ {
+ op2 = s[top--];
+ op1 = s[top--];
+ res = compute(symbol, op1, op2);
+ s[++top] = res;
+ }
+}
+res = s[top--];
+printf("\nThe result is : %f\n", res);
+
+}
+
+
+5B
+#include<stdio.h>
+#include<math.h>
+void tower(int n, int source, int temp, int destination);
+
+void tower(int n, int source, int temp, int destination)
+{
+if(n == 0)
+ return;
+tower(n-1, source, destination, temp);
+printf("\nMove disc %d from %c to %c", n, source, destination);
+tower(n-1, temp, source, destination);
+}
+
+int main ()
+{
+int n;
+printf("\nEnter the number of discs: \n\n");
+scanf("%d", &n);
+printf("\nThe sequence of moves involved in the Tower of Hanoi are\n");
+tower(n, 'A', 'B', 'C');
+printf("\n\nTotal Number of moves are: %d\n", (int)pow(2,n)-1);
+
+}
+6
+#include <stdio.h>
+#include <stdlib.h>
+#define max 5
+int q[max],f=-1,r=-1;
+void ins()
+{
+    if(f==(r+1)%max)
+        printf("\nQueue overflow");
+    else
+    {
+        if(f==-1)
+            f++;
+        r=(r+1)%max;
+        printf("\nEnter element to be inserted:");
+        scanf("%d",&q[r]);
+    }
+}
+void del()
+{
+    if(r==-1)
+        printf("\nQueue underflow");
+    else
+    {
+        printf("\nElemnt deleted is:%d",q[f]);
+        if(f==r)
+            f=r=-1;
+        else
+            f=(f+1)%max;
+    }
+}
+void disp()
+{
+    if(f==-1)
+        printf("\nQueue empty");
+    else
+    {
+        int i;
+        printf("\nQueue elements are:\n");
+        for(i=f;i!=r;i=(i+1)%max)
+            printf("%d\t",q[i]);
+        printf("%d",q[i]);
+        printf("\nFront is at:%d\nRear is at:%d",q[f],q[r]);
+    }
+}
+int main()
+{
+    printf("\nCircular Queue operations");
+    printf("\n1.Insert");
+    printf("\n2.Delete");
+    printf("\n3.Display");
+    printf("\n4.Exit");
+    int ch;
+    do{
+        printf("\nEnter choice:");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:ins();break;
+            case 2:del();break;
+            case 3:disp();break;
+            case 4:exit(0);
+            default:printf("\nInvalid choice...!");
+        }
+   }while(1);
+    return 0;
+
+}
+
+
+7
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+struct stud
+{
+    char usn[11],name[15],branch[4],phno[11];
+    int sem;
+    struct stud *next;
+}*f=NULL,*r=NULL,*t=NULL;
+void ins(int ch)
+{
+    t=(struct stud*)malloc(sizeof(struct stud));
+    printf("\nEnter USN:");
+    scanf("%s",t->usn);
+    printf("Enter Name:");
+    scanf("%s",t->name);
+    printf("Enter Branch:");
+    scanf("%s",t->branch);
+    printf("Enter Sem:");
+    scanf("%d",&t->sem);
+    printf("Enter Phno:");
+    scanf("%s",t->phno);
+    t->next=NULL;
+    if(!r)
+        f=r=t;
+    else
+    {
+        if(ch)
+        {
+            r->next=t;
+            r=t;
+        }
+        else
+        {
+            t->next=f;
+            f=t;
+        }
+    }
+}
+void del(int ch)
+{
+    if(!f)
+        printf("\nList Empty");
+    else
+    {
+        struct stud *t1;
+        if(f==r)
+        {
+            t1=f;
+            f=r=NULL;
+        }
+        else if(ch)
+        {
+            t1=r;
+            for(t=f;t->next!=r;t=t->next)
+                r=t;
+            r->next=NULL;
+        }
+        else
+        {
+            t1=f;
+            f=f->next;
+        }
+        printf("\nElement deleted is:\n");
+        printf("USN:%s\nName:%s\nBranch:%s\nSem:%d\nPhno:%s\n",t1->usn,t1->name,t1->branch,t1->sem,t1->phno);
+        free(t1);
+    }
+}
+void disp()
+{
+    if(!f)
+        printf("\nList Empty!!!");
+    else
+        printf("\nList elements are:\n");
+    for(t=f;t;t=t->next)
+        printf("\nUSN:%s\nName:%s\nBranch:%s\nSem:%d\nPhno:%s\n",t->usn,t->name,t->branch,t->sem,t->phno);
+}
+void main()
+{
+    int ch,n,i;
+    printf("\n........Menu..........,\n");
+    printf("1.Create\n");
+    printf("2.Display\n");
+    printf("3.Insert at end\n");
+    printf("4.Delete at end\n");
+    printf("5.Insert at beg\n");
+    printf("6.Delete at beg\n");
+    printf("7.Exit\n");
+    while(1)
+    {
+        printf("\nEnter choice:");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1: printf("\nEnter no. of nodes:");
+                    scanf("%d",&n);
+                    for(i=0;i<n;i++)
+                        ins(0);
+                    break;
+            case 2:disp();break;
+            case 3:ins(1);break;
+            case 4:del(1);break;
+            case 5:ins(0);break;
+            case 6:del(0);break;
+            case 7:exit(0);
+            default:printf("\nInvalid choice!!!!");
+        }
+    }
+
+}
+
